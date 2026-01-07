@@ -16,12 +16,39 @@ public class BookingService {
         this.bookingRepository = bookingRepository;
     }
 
+    // ✅ Save booking
     public Booking saveBooking(Booking booking) {
         return bookingRepository.save(booking);
     }
 
-    // ✅ Fetch all bookings
+    //   Get booking by ID (Confirmation page)
+    public Booking getBookingById(Long id) {
+        return bookingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+    }
+
+   // Get bookings of logged-in user (MY BOOKINGS)
+    public List<Booking> getBookingsByUserEmail(String email) {
+        return bookingRepository.findByUserEmail(email);
+    }
+
+    // ✅ Get all bookings (Admin / Debug)
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
     }
+
+    // ✅ Delete booking
+    public void deleteBooking(Long id) {
+        bookingRepository.deleteById(id);
+    }
+
+    public Booking updateBooking(Long id, Booking updated) {
+        Booking booking = getBookingById(id);
+        booking.setTitle(updated.getTitle());
+        booking.setPrice(updated.getPrice());
+        booking.setUserName(updated.getUserName());
+        booking.setUserEmail(updated.getUserEmail());
+        return bookingRepository.save(booking);
+    }
+
 }

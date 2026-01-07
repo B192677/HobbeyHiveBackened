@@ -1,7 +1,7 @@
 package com.hobbeyhive.backend.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.hobbeyhive.backend.entity.User;
@@ -23,17 +23,18 @@ public class AuthController {
 
     // LOGIN
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public ResponseEntity<String> login(@RequestBody User user) {
+
         User existingUser = userRepo.findByEmail(user.getEmail());
 
         if (existingUser == null) {
-            return "User not found";
+            return ResponseEntity.status(404).body("User not found");
         }
 
         if (!existingUser.getPassword().equals(user.getPassword())) {
-            return "Invalid password";
+            return ResponseEntity.status(401).body("Invalid password");
         }
 
-        return "Login successful";
+        return ResponseEntity.ok("Login successful");
     }
 }
